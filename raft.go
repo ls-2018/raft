@@ -1750,12 +1750,16 @@ func (r *Raft) electSelf() <-chan *voteResult {
 					},
 					voterID: r.localID,
 				}
-			} else {
+			}
+		}
+	}
+	for _, server := range r.configurations.latest.Servers {
+		if server.Suffrage == Voter {
+			if server.ID != r.localID {
 				askPeer(server)
 			}
 		}
 	}
-
 	return respCh
 }
 
